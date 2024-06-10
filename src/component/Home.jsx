@@ -8,6 +8,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { GrEdit } from "react-icons/gr";
 import lodar from "../assets/videos/spinner.gif";
 import "./Home.css";
+import { deleteEmployee, getEmployee } from "../api/apifunction/ApiFunction";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -19,8 +20,7 @@ const Home = () => {
 
   const getUser = async () => {
     setShowLoader(true);
-    await axios
-      .get("https://60fbca4591156a0017b4c8a7.mockapi.io/fakeData")
+    getEmployee()
       .then((response) => {
         if (response) {
           setEmployee(response.data);
@@ -40,8 +40,7 @@ const Home = () => {
   const deleteItem = async (id) => {
     setShowModal(false);
     setShowLoader(true);
-    await axios
-      .delete(`https://60fbca4591156a0017b4c8a7.mockapi.io/fakeData/${id}`)
+    deleteEmployee(id)
       .then((response) => {
         if (response) {
           getUser();
@@ -87,7 +86,7 @@ const Home = () => {
             {employee.map((item, index) => {
               return (
                 <tr key={index}>
-                  <th scope="row">{item.id}</th>
+                  <th scope="row">{item?.id}</th>
                   <td>{item.firstName}</td>
                   <td>{item.lastName}</td>
                   <td>{item.checkbox}</td>

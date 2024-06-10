@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { constantString } from "../constant/ConstantString";
 import EmpNavbar from "./EmpNavbar/EmpNavbar";
 import EmpButton from "./EmpButton/Empbutton";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import lodar from "../assets/videos/spinner.gif";
+import { addEmployee } from "../api/apifunction/ApiFunction";
 
 const AddEmp = () => {
   const [firstName, setFirstName] = useState("");
@@ -12,6 +12,7 @@ const AddEmp = () => {
   const [gender, setGender] = useState("");
   const navigate = useNavigate();
   const [showLoader, setShowLoader] = useState(false);
+
   const handleGender = (e) => {
     if (e.target.value == "male") {
       setGender("Male");
@@ -23,24 +24,24 @@ const AddEmp = () => {
   const formSubmittion = async (e) => {
     e.preventDefault();
     if (firstName.length == 0) {
-      alert("");
+      alert(constantString.ENTER_FIRST_NAME);
       return;
     }
     if (lastName.length == 0) {
-      alert("");
+      alert(constantString.ENTER_LAST_NAME);
       return;
     }
     if (gender.length == 0) {
-      alert("");
+      alert(constantString.SELECT_GENDER);
       return;
     }
     setShowLoader(true);
-    await axios
-      .post("https://60fbca4591156a0017b4c8a7.mockapi.io/fakeData", {
-        firstName: firstName,
-        lastName: lastName,
-        checkbox: gender,
-      })
+    const payload = {
+      firstName: firstName,
+      lastName: lastName,
+      checkbox: gender,
+    };
+    addEmployee(payload)
       .then((response) => {
         if (response) {
           setFirstName("");
@@ -50,7 +51,7 @@ const AddEmp = () => {
         }
       })
       .catch((error) => {
-        console.log(error.message);
+        console.log(error);
       })
       .finally(() => {
         setShowLoader(false);

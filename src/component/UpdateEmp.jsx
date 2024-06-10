@@ -5,6 +5,7 @@ import EmpButton from "./EmpButton/Empbutton";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import lodar from "../assets/videos/spinner.gif";
+import { getSingleEmployee } from "../api/apifunction/ApiFunction";
 
 const UpdateEmp = () => {
   const location = useLocation();
@@ -22,14 +23,12 @@ const UpdateEmp = () => {
     }
   };
 
-  const getSingleUser = async () => {
+  const getSingleUser = () => {
     setShowLoader(true);
-    await axios
-      .get(
-        `https://60fbca4591156a0017b4c8a7.mockapi.io/fakeData/${location.state.userId}`
-      )
+    getSingleEmployee(location.state.userId)
       .then((response) => {
         if (response) {
+          console.log(response.data);
           setFirstName(response.data.firstName);
           setLastName(response.data.lastName);
           setGender(response.data.checkbox);
@@ -50,15 +49,14 @@ const UpdateEmp = () => {
   const UpdateItem = async (e) => {
     setShowLoader(true);
     e.preventDefault();
-    await axios
-      .put(
-        `https://60fbca4591156a0017b4c8a7.mockapi.io/fakeData/${location.state.userId}`,
-        {
-          firstName: firstName,
-          lastName: lastName,
-          checkbox: gender,
-        }
-      )
+
+    const payload = {
+      id: location.state.userId,
+      firstName: firstName,
+      lastName: lastName,
+      checkbox: gender,
+    };
+    updateEmployee(payload)
       .then((response) => {
         if (response) {
           navigate("/");
